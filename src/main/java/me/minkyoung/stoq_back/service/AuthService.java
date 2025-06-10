@@ -41,6 +41,7 @@ public class AuthService {
 
         //RefreshToken 저장
         RefreshToken refresh = new RefreshToken(user.getEmail(), refreshToken);
+        refreshTokenRepository.save(refresh);
 
         return new TokenDto(accessToken, refreshToken);
     }
