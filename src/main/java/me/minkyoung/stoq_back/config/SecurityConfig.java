@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth ->auth
                         .requestMatchers("/auth/login", "/auth/signup","/auth/reissue").permitAll()
+                        .requestMatchers("/api/studyrooms").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
