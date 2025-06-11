@@ -5,6 +5,7 @@ import me.minkyoung.stoq_back.dto.StudyRoomResponseDto;
 import me.minkyoung.stoq_back.service.StudyRoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,5 +21,11 @@ public class StudyRoomController {
     public ResponseEntity<List<StudyRoomResponseDto>> getAllStudyRooms() {
         List<StudyRoomResponseDto> studyRooms = studyRoomService.getAllStudyRooms();
         return ResponseEntity.ok(studyRooms);
+    }
+
+    @GetMapping("/studyrooms/details/{id}")
+    public ResponseEntity<StudyRoomResponseDto> getStudyRoomDetails(@PathVariable Long id) {
+        StudyRoomResponseDto studyRoom = studyRoomService.getStudyRoomById(id);
+        return ResponseEntity.ok(studyRoom);
     }
 }

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,4 +16,15 @@ public class StudyRoomResponseDto {
     private String name;
     private String location;
     private boolean isActive;
+    private LocalDateTime openTime;
+    private LocalDateTime closeTime;
+    private int total_seats;
+
+    public StudyRoomResponseDto(Long id, String name, String location, boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.isActive = isActive;
+    }
+
 }
