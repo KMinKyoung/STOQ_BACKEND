@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->auth
                         .requestMatchers("/auth/login", "/auth/signup","/auth/reissue").permitAll()
                         .requestMatchers("/api/studyrooms","/api/studyrooms/details/**").permitAll()
+                        .requestMatchers("/api/studyrooms/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

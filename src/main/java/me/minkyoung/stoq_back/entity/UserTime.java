@@ -11,28 +11,27 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "seat")
+@Table(name = "user_time")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Seat {
+@AllArgsConstructor
+public class UserTime {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //자동 증가
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //자동증가
     private Long id;
 
-    @Column(nullable = false)
-    private int seatNumber; //번호가 있어야지 사용자가 그 번호 기준으로 선택 가능 A1,B1으로 나눌지 숫자로 나눌지 고민해봐야함
-
-    @Column(nullable = false)
-    private boolean isAvailable = true;
-
-    @JoinColumn(name = "studyRoom_id")
+    @JoinColumn(name ="user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private StudyRoom studyRoom;
+    private User user;
+
+    @Column(nullable = false)
+    private int remainingMinutes;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

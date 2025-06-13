@@ -1,11 +1,16 @@
 package me.minkyoung.stoq_back.service;
 
 import lombok.AllArgsConstructor;
+import me.minkyoung.stoq_back.domain.ReservationStatus;
+import me.minkyoung.stoq_back.dto.ReservationRequestDto;
+import me.minkyoung.stoq_back.dto.ReservationResponseDto;
 import me.minkyoung.stoq_back.dto.StudyRoomResponseDto;
-import me.minkyoung.stoq_back.entity.StudyRoom;
-import me.minkyoung.stoq_back.repository.StudyRoomRepository;
+import me.minkyoung.stoq_back.entity.*;
+import me.minkyoung.stoq_back.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,6 +19,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class StudyRoomService {
     private final StudyRoomRepository studyRoomRepository;
+    private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
+    private final UserTimeRepository userTimeRepository;
+    private final SeatRepository seatRepository;
 
     public List<StudyRoomResponseDto> getAllStudyRooms(){
 
@@ -53,6 +62,76 @@ public class StudyRoomService {
                 studyRoom1.getOpenTime(),
                 studyRoom1.getCloseTime(),
                 studyRoom1.getTotal_seats()
+        );
+    }
+
+    @Transactional //예약시 데이터 일관성 유지
+    //스터디룸 좌석 예약
+    public ReservationResponseDto reserveSeat(ReservationRequestDto requestDto){
+        //좌석 객체 생성
+        Seat seat = seatRepository.findById(requestDto.getSeat_id())
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 좌석입니다."));
+        //유저 객체(회원 비회원 모두 가능)생성
+        User user = userRepository.findById(requestDto.getUser_id())
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        //좌석 전체를 조회함 -> 좌석을 다 사용하는 경우 "현재 만석으로 예약이 불가능합니다."
+        List<Seat> seats = seatRepository.findByStudyRoomId(seat.getStudyRoom().getId());
+
+        long userdSeatCount = 0;
+        for(Seat s : seats){
+            Optional<Reservation> activeReservation = reservationRepository.findBySeatIdAndStatusAndStartTimeLessThanEqualAndEndTimeGreaterThan(
+                            s.getId(),
+                    ReservationStatus.RESERVED,
+                    LocalDateTime.now(),
+                    LocalDateTime.now()
+            );
+            if(activeReservation.isPresent()){
+                userdSeatCount++;
+            }
+        }
+
+        if(userdSeatCount >= seats.size()){
+            throw new IllegalArgumentException("현재 만석으로 예약이 불가능합니다.");
+        }
+
+
+        //좌석 선택 -> 회원이면서 시간이 충전되어있는 경우 바로 예약 진행 및 완료/ 회원이지만 충전되지 않을 경우, "시간을 충전해야합니다." / 비회원일 경우 시간 충전이 먼저 이뤄지기에 그냥 바로 예약 진행 완료
+        //좌석 사용 여부 확인
+        Optional<Reservation> activeReservation = reservationRepository.findBySeatIdAndStatusAndStartTimeLessThanEqualAndEndTimeGreaterThan(
+                seat.getId(),
+                ReservationStatus.RESERVED,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        if(activeReservation.isPresent()){
+            throw new IllegalArgumentException("해당 좌석은 현재 사용중입니다.");
+        }
+
+        //회원일 경우
+        UserTime userTime = userTimeRepository.findByUser_Id(user.getId())
+                .orElseThrow(()-> new IllegalArgumentException("회원의 이용 시간이 등록되어 있지 않습니다. 시간을 충전해주세요"));
+        if(userTime.getRemainingMinutes() <= 0){
+            throw new IllegalArgumentException("시간을 충전해야합니다.");
+        }
+
+        //Reservation 생성 및 저장
+        Reservation reservation = new Reservation();
+        reservation.setSeat(seat);
+        reservation.setUser(user);
+        reservation.setStartTime(requestDto.getStart_time());
+        reservation.setEndTime(requestDto.getEnd_time());
+        reservation.setPrice(requestDto.getPrice());
+        reservation.setStatus(ReservationStatus.RESERVED);
+
+        reservationRepository.save(reservation);
+
+        return new ReservationResponseDto(
+                reservation.getId(),
+                seat.getId(),
+                reservation.getStartTime(),
+                reservation.getEndTime(),
+                reservation.getStatus()
         );
     }
 }

@@ -1,6 +1,10 @@
 package me.minkyoung.stoq_back.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import me.minkyoung.stoq_back.domain.ReservationStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,6 +14,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reservation")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +31,11 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
 
-    @Column(nullable = false) //
-    private LocalDateTime start_time;
+    @Column(nullable = false, name ="start_time")
+    private LocalDateTime startTime;
 
-    @Column(nullable = false)
-    private LocalDateTime end_time;
+    @Column(nullable = false,name ="end_time")
+    private LocalDateTime endTime;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
