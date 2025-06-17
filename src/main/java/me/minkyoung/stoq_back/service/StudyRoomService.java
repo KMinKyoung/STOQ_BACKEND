@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import me.minkyoung.stoq_back.domain.ReservationStatus;
 import me.minkyoung.stoq_back.dto.ReservationRequestDto;
 import me.minkyoung.stoq_back.dto.ReservationResponseDto;
+import me.minkyoung.stoq_back.dto.SeatStatusResponseDto;
 import me.minkyoung.stoq_back.dto.StudyRoomResponseDto;
 import me.minkyoung.stoq_back.entity.*;
 import me.minkyoung.stoq_back.repository.*;
@@ -133,5 +134,43 @@ public class StudyRoomService {
                 reservation.getEndTime(),
                 reservation.getStatus()
         );
+    }
+
+    //전쳬 좌석 + 예약 가능 좌석 선택 -> 예약으로 연결
+    public List<SeatStatusResponseDto> getSeatStatusList(Long studyRoomId, User user){
+        //로그인한 회원인지 확인, 아닐 경우 -> 로그인 하세요
+        if(user == null){
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+        //로그인했지만 시간이 충전되어있지 않을 경우 -> 시간을 충전하셔야 합니다.
+        if(user.getRemaining_time()<=0){
+            throw new IllegalArgumentException("회원의 이용 시간이 등록되어 있지 않습니다. 시간을 충전해주세요.");
+        }
+        //스터디룸의 전체 좌석 조회
+        List<Seat> seats = seatRepository.findByStudyRoomId(studyRoomId);
+        LocalDateTime now = LocalDateTime.now();
+
+        // 각 좌석의 예약 여부 확인 후 DTO변환
+        return seats.stream().map(seat ->{
+            Optional<Reservation> activeReservation = reservationRepository.findBySeatAndStatusAndEndTimeAfter(
+                    seat,
+                    ReservationStatus.RESERVED,
+                    now
+            );
+
+            boolean isAvailable = activeReservation.isEmpty();
+            LocalDateTime endTime = activeReservation.map(Reservation::getStartTime).orElse(null);
+
+            //SeatStatusResponseDto로 변환
+            SeatStatusResponseDto dto = new SeatStatusResponseDto();
+            dto.setId(seat.getId());
+            dto.setSeatNumber(seat.getSeatNumber());
+            dto.setAvailable(isAvailable);
+            dto.setEndTime(endTime);
+            dto.setStudyRommId(studyRoomId);
+            System.out.println("서비스 도달함");
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
