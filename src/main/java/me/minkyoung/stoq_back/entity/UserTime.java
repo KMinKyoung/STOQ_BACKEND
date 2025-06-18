@@ -23,7 +23,7 @@ public class UserTime {
     private Long id;
 
     @JoinColumn(name ="user_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Column(nullable = false)
@@ -34,4 +34,8 @@ public class UserTime {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public void addMinutes(int minutes) {
+        this.remainingMinutes += minutes;
+    }
 }

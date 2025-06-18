@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth ->auth
                         .requestMatchers("/auth/login", "/auth/signup","/auth/reissue").permitAll()
-                        .requestMatchers("/api/studyrooms","/api/studyrooms/details/**").permitAll()
+                        .requestMatchers("/api/studyrooms","/api/studyrooms/details/**","/api/times/products").permitAll()
                         .requestMatchers("/api/studyrooms/**","/api/reservations/**").authenticated()
                         .anyRequest().authenticated()
                 )

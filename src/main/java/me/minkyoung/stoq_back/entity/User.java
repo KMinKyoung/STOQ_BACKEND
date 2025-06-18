@@ -35,7 +35,7 @@ public class User {
     private boolean isMember; //회원/비회원 구분
 
     @Column()
-    private int remaining_time; //예약 후 남은 시간(분단위)
+    private int remaining_time; //예약 후 남은 시간(분단위) -> 따로 관리
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -43,5 +43,8 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    // user_time 과 1:1 양방향 매핑
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private UserTime userTime;
 
 }
