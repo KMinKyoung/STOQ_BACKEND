@@ -42,4 +42,10 @@ public class StudyRoom {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public StudyRoom(String name, String location, int total_seats){
+        this.name = name;
+        this.location = location;
+        this.total_seats = total_seats;
+    }
 }

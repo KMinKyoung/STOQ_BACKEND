@@ -34,6 +34,9 @@ public class User {
     @Column()
     private boolean isMember; //회원/비회원 구분
 
+   /* @Column(name = "is_admin")
+    private boolean isAdmin =false;*/
+
     @Column()
     private int remaining_time; //예약 후 남은 시간(분단위) -> 따로 관리
 

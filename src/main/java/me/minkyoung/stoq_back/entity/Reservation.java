@@ -49,4 +49,7 @@ public class Reservation {
 
     @Column
     private int price;
+
+    @Column(name = "canceled_at")
+    private LocalDateTime canceledAt;
 }

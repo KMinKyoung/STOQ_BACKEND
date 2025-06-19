@@ -2,15 +2,13 @@ package me.minkyoung.stoq_back.service;
 
 import lombok.AllArgsConstructor;
 import me.minkyoung.stoq_back.domain.ReservationStatus;
-import me.minkyoung.stoq_back.dto.ReservationRequestDto;
-import me.minkyoung.stoq_back.dto.ReservationResponseDto;
-import me.minkyoung.stoq_back.dto.SeatStatusResponseDto;
-import me.minkyoung.stoq_back.dto.StudyRoomResponseDto;
+import me.minkyoung.stoq_back.dto.*;
 import me.minkyoung.stoq_back.entity.*;
 import me.minkyoung.stoq_back.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +22,7 @@ public class StudyRoomService {
     private final UserRepository userRepository;
     private final UserTimeRepository userTimeRepository;
     private final SeatRepository seatRepository;
+    private final TimeChargeService timeChargeService;
 
     public List<StudyRoomResponseDto> getAllStudyRooms(){
 
@@ -172,5 +171,35 @@ public class StudyRoomService {
 
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    //예약 취소
+    @Transactional
+    public CancelReservationResponseDto cancelReservation(Long userId, CancelReservationRequestDto requestDto){
+        Reservation reservation = reservationRepository.findByIdAndUser_Id(requestDto.getReservationId(), userId)
+                .orElseThrow(()-> new IllegalArgumentException("유효하지 않은 예약입니다."));
+        if(reservation.getStatus() == ReservationStatus.CANCELLED){
+            throw new IllegalArgumentException("이미 취소된 예약됩니다.");
+        }
+
+        //사용시간 계산
+        long usedMinutes = Duration.between(reservation.getStartTime(), LocalDateTime.now()).toMinutes();
+        long totalMinutes = Duration.between(reservation.getStartTime() ,reservation.getEndTime()).toMinutes();
+        long refundableLong = Math.max(0,totalMinutes-usedMinutes);
+
+        int refundable = (int) refundableLong;
+        //유저에게 시간 환급
+        User user = userRepository.findByIdWithTime(userId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        user.getUserTime().addMinutes(refundable);
+        userRepository.save(user);
+        int newRemaining = user.getUserTime().getRemainingMinutes();
+
+        //예약 상태 없데이트
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.setCanceledAt(LocalDateTime.now());
+        reservationRepository.save(reservation);
+
+        return new CancelReservationResponseDto(reservation.getId(), refundable, newRemaining);
     }
 }

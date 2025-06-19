@@ -25,6 +25,7 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginRequestDto requestDto){
+        System.out.println("로그인요청"+requestDto);
         TokenDto tokenDto = authService.login(requestDto.getEmail(),requestDto.getPassword());
         return ResponseEntity.ok(tokenDto);
     }

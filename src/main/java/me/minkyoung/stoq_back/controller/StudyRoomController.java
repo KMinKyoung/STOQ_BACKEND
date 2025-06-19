@@ -1,10 +1,7 @@
 package me.minkyoung.stoq_back.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.minkyoung.stoq_back.dto.ReservationRequestDto;
-import me.minkyoung.stoq_back.dto.ReservationResponseDto;
-import me.minkyoung.stoq_back.dto.SeatStatusResponseDto;
-import me.minkyoung.stoq_back.dto.StudyRoomResponseDto;
+import me.minkyoung.stoq_back.dto.*;
 import me.minkyoung.stoq_back.entity.User;
 import me.minkyoung.stoq_back.service.CustomUserDetails;
 import me.minkyoung.stoq_back.service.StudyRoomService;
@@ -41,6 +38,7 @@ public class StudyRoomController {
         return ResponseEntity.ok(responseDto);
     }
 
+    //좌석 자리 확인
     @GetMapping("/studyrooms/{studyRoomId}/seats")
     public ResponseEntity<List<SeatStatusResponseDto>> getAllReservations(@PathVariable Long studyRoomId , @AuthenticationPrincipal CustomUserDetails userDetails) {
         User user = userDetails.getUser();
@@ -48,5 +46,12 @@ public class StudyRoomController {
         return ResponseEntity.ok(responseDto);
     }
 
+    //예약 취소
+    @PostMapping("/reservations/cancel")
+    public ResponseEntity<CancelReservationResponseDto> cancelReservation(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody CancelReservationRequestDto requestDto) {
+        Long user = userDetails.getUser().getId();
+        CancelReservationResponseDto responseDto = studyRoomService.cancelReservation(user, requestDto);
 
+        return ResponseEntity.ok(responseDto);
+    }
 }
