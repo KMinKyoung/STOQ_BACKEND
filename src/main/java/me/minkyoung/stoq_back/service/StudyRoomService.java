@@ -167,7 +167,6 @@ public class StudyRoomService {
             dto.setAvailable(isAvailable);
             dto.setEndTime(endTime);
             dto.setStudyRommId(studyRoomId);
-            System.out.println("서비스 도달함");
 
             return dto;
         }).collect(Collectors.toList());
