@@ -38,4 +38,11 @@ public class UserTime {
     public void addMinutes(int minutes) {
         this.remainingMinutes += minutes;
     }
+
+    public void subMinutes(int minutes) {
+        if(this.remainingMinutes < minutes) {
+            throw new IllegalArgumentException("잔여 시간이 부족합니다");
+        }
+        this.remainingMinutes -= minutes;
+    }
 }

@@ -1,11 +1,12 @@
-jwt:
-  secret: mystudyroomcafeSTOQsecretkeyissoooooooooooooooooooooolong
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/stoq_db
+    url: jdbc:mysql://gondola.proxy.rlwy.net:58630/railway
     username: root
-    password: root1234
+    password: bAOZUBygmTsxwqIDlMCEeCwjTfiQTXHm
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+jwt:
+  secret: mystudyroomcafeSTOQsecretkeyissoooooooooooooooooooooolong
