@@ -1,7 +1,7 @@
 spring:
   datasource:
     datasource:
-      url: jdbc:mysql://root:EyZJwlKTUQeEQmBTXLmjYosNZmTCdhrt@mainline.proxy.rlwy.net:15295/railway
+      url: jdbc:mysql://mainline.proxy.rlwy.net:15295/railway
       username: root
       password: EyZJwlKTUQeEQmBTXLmjYosNZmTCdhrt
 
