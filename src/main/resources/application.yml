@@ -1,14 +1,9 @@
 spring:
   datasource:
-    datasource:
-      url: jdbc:mysql://mainline.proxy.rlwy.net:15295/railway
-      username: root
-      password: EyZJwlKTUQeEQmBTXLmjYosNZmTCdhrt
-
-  #    url: jdbc:mysql://localhost:3306/stoq_db
-#    username: root
-#    password: root1234
-
+    url: jdbc:mysql://mainline.proxy.rlwy.net:15295/railway?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: EyZJwlKTUQeEQmBTXLmjYosNZmTCdhrt
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
