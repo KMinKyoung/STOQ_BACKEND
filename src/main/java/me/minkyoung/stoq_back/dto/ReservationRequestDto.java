@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ReservationRequestDto {
-    private Long seat_id;
-    private Long user_id;
-    private LocalDateTime start_time;
-    private LocalDateTime end_time;
-    private int price;
+    private Long seatId;
+    private Long userId;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 }

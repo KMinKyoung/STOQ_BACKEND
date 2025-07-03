@@ -31,6 +31,14 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY)
     private Seat seat;
 
+    @JoinColumn(name = "user_time_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UserTime userTime;
+
+    @JoinColumn(name = "study_room_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private StudyRoom studyRoom;
+
     @Column(nullable = false, name ="start_time")
     private LocalDateTime startTime;
 
@@ -46,9 +54,6 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReservationStatus status;
-
-    @Column
-    private int price;
 
     @Column(name = "canceled_at")
     private LocalDateTime canceledAt;

@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 public class ReservationResponseDto {
     private Long reservationId;
     private Long seatId;
-    private LocalDateTime start_time;
-    private LocalDateTime end_time;
+    private Long studyRoomId;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private ReservationStatus status;
+    private int remainingMinutes;
 }

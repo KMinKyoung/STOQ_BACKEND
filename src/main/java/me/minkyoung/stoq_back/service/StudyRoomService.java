@@ -69,10 +69,10 @@ public class StudyRoomService {
     //스터디룸 좌석 예약
     public ReservationResponseDto reserveSeat(ReservationRequestDto requestDto){
         //좌석 객체 생성
-        Seat seat = seatRepository.findById(requestDto.getSeat_id())
+        Seat seat = seatRepository.findById(requestDto.getSeatId())
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 좌석입니다."));
         //유저 객체(회원 비회원 모두 가능)생성
-        User user = userRepository.findById(requestDto.getUser_id())
+        User user = userRepository.findById(requestDto.getUserId())
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         //좌석 전체를 조회함 -> 좌석을 다 사용하는 경우 "현재 만석으로 예약이 불가능합니다."
@@ -119,9 +119,8 @@ public class StudyRoomService {
         Reservation reservation = new Reservation();
         reservation.setSeat(seat);
         reservation.setUser(user);
-        reservation.setStartTime(requestDto.getStart_time());
-        reservation.setEndTime(requestDto.getEnd_time());
-        reservation.setPrice(requestDto.getPrice());
+        reservation.setStartTime(requestDto.getStartTime());
+        reservation.setEndTime(requestDto.getEndTime());
         reservation.setStatus(ReservationStatus.RESERVED);
 
         reservationRepository.save(reservation);
@@ -129,9 +128,11 @@ public class StudyRoomService {
         return new ReservationResponseDto(
                 reservation.getId(),
                 seat.getId(),
+                seat.getStudyRoom().getId(),
                 reservation.getStartTime(),
                 reservation.getEndTime(),
-                reservation.getStatus()
+                reservation.getStatus(),
+                userTime.getRemainingMinutes()
         );
     }
 
