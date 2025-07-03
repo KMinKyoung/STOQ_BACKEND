@@ -13,7 +13,7 @@ public class CorsGlobalConfig{
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","https://stoq-front.onrender.com"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","")); //추후 배포되는 프론트엔드와 연결될 예정
         configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

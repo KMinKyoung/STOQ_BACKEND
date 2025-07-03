@@ -47,7 +47,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     // user_time 과 1:1 양방향 매핑
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
     private UserTime userTime;
 
 }
