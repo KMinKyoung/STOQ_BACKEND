@@ -142,8 +142,8 @@ public class StudyRoomService {
             throw new IllegalArgumentException("로그인이 필요합니다.");
         }
         //로그인했지만 시간이 충전되어있지 않을 경우 -> 시간을 충전하셔야 합니다.
-        if(user.getRemaining_time()<=0){
-            throw new IllegalArgumentException("회원의 이용 시간이 등록되어 있지 않습니다. 시간을 충전해주세요.");
+        if (user.getUserTime() == null || user.getUserTime().getRemainingMinutes() <= 0) {
+            throw new IllegalArgumentException("시간을 충전해야 합니다.");
         }
         //스터디룸의 전체 좌석 조회
         List<Seat> seats = seatRepository.findByStudyRoomId(studyRoomId);
