@@ -1,7 +1,7 @@
 spring:
   datasource:
     datasource:
-      url: jdbc:mysql://mainline.proxy.rlwy.net:15295/railway
+      url: jdbc:mysql://mainline.proxy.rlwy.net:15295/railway?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
       username: root
       password: EyZJwlKTUQeEQmBTXLmjYosNZmTCdhrt
 
