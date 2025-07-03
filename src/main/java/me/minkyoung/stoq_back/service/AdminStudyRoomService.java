@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import me.minkyoung.stoq_back.dto.AdminStudyRoomRequestDto;
 import me.minkyoung.stoq_back.dto.AdminStudyRoomResponseDto;
 import me.minkyoung.stoq_back.dto.StudyRoomResponseDto;
+import me.minkyoung.stoq_back.entity.Seat;
 import me.minkyoung.stoq_back.entity.StudyRoom;
+import me.minkyoung.stoq_back.repository.SeatRepository;
 import me.minkyoung.stoq_back.repository.StudyRoomRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +19,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminStudyRoomService {
     private final StudyRoomRepository studyRoomRepository;
+    private final SeatRepository seatRepository;
 
-    //스터디룸 생성
+    //스터디룸 생성]
+    @Transactional
     public AdminStudyRoomResponseDto createStudyRoom(AdminStudyRoomRequestDto requestDto) {
         StudyRoom studyRoom = new StudyRoom(
                 requestDto.getName(),
                 requestDto.getLocation(),
                 requestDto.getTotal_seats()
         );
+
+        //좌석 자동 생성
         StudyRoom saved = studyRoomRepository.save(studyRoom);
+        for (int i = 1; i <= requestDto.getTotal_seats(); i++) {
+            Seat seat = new Seat();
+            seat.setSeatNumber(i);
+            seat.setAvailable(true);
+            seat.setStudyRoom(saved);
+            seatRepository.save(seat);
+        }
         return new AdminStudyRoomResponseDto(
                 saved.getId(),
                 saved.getLocation(),
