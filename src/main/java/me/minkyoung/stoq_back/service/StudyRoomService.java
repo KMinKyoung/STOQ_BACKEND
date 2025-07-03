@@ -151,6 +151,7 @@ public class StudyRoomService {
 
         // 각 좌석의 예약 여부 확인 후 DTO변환
         return seats.stream().map(seat ->{
+
             Optional<Reservation> activeReservation = reservationRepository.findBySeatAndStatusAndEndTimeAfter(
                     seat,
                     ReservationStatus.RESERVED,

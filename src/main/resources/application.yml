@@ -1,8 +1,15 @@
 spring:
   datasource:
-    url: jdbc:mysql://shortline.proxy.rlwy.net.48048/railway
-    username: root
-    password: DKAXLnBPoleoQoTFdJKABfHfZwQQkLCV
+    datasource:
+      url: mysql://root:EyZJwlKTUQeEQmBTXLmjYosNZmTCdhrt@mainline.proxy.rlwy.net:15295/railway
+      username: root
+      password: EyZJwlKTUQeEQmBTXLmjYosNZmTCdhrt
+
+  #    url: jdbc:mysql://localhost:3306/stoq_db
+#    username: root
+#    password: root1234
+
+
   jpa:
     hibernate:
       ddl-auto: update
