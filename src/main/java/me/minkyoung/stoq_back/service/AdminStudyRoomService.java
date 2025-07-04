@@ -7,6 +7,7 @@ import me.minkyoung.stoq_back.dto.AdminStudyRoomResponseDto;
 import me.minkyoung.stoq_back.dto.StudyRoomResponseDto;
 import me.minkyoung.stoq_back.entity.Seat;
 import me.minkyoung.stoq_back.entity.StudyRoom;
+import me.minkyoung.stoq_back.repository.ReservationRepository;
 import me.minkyoung.stoq_back.repository.SeatRepository;
 import me.minkyoung.stoq_back.repository.StudyRoomRepository;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class AdminStudyRoomService {
     private final StudyRoomRepository studyRoomRepository;
     private final SeatRepository seatRepository;
     private final KakaoMapService kakaoMapService;
+    private final ReservationRepository reservationRepository;
 
     //스터디룸 생성]
     @Transactional
@@ -75,12 +77,16 @@ public class AdminStudyRoomService {
     //스터디룸 삭제
     @Transactional
     public void deleteStudyRoom(Long id) {
-        if(!studyRoomRepository.existsById(id)){
-            throw new EntityNotFoundException("해당 id의 스터디룸을 찾을 수 없습니다" + id);
-        }
-        studyRoomRepository.deleteById(id);
+        StudyRoom studyRoom = studyRoomRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 id의 스터디룸을 찾을 수 없습니다: " + id));
+
+        reservationRepository.deleteByStudyRoomId(id);
+
+        seatRepository.deleteByStudyRoomId(id);
+
+        studyRoomRepository.delete(studyRoom);
     }
-    //스터디룸 조회
+
     @Transactional(readOnly = true)
     public List<AdminStudyRoomResponseDto> findAllStudyRoom() {
         return studyRoomRepository.findAll().stream()
