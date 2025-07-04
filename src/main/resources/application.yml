@@ -19,3 +19,6 @@ jwt:
 iamport:
   api-key: 0233760512381147
   api-secret: npvnKFv4D4qTtjjKTduHtYD8VsiRPL7142hYhPgZ56imn9n0PHoFdZ3beckiWRO4NirwCsJxeEJRuLD9
+
+kakao:
+  rest-api-key: 07976b4d3ac9d7da5578981736b452f5

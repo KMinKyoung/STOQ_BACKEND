@@ -20,17 +20,26 @@ import java.util.stream.Collectors;
 public class AdminStudyRoomService {
     private final StudyRoomRepository studyRoomRepository;
     private final SeatRepository seatRepository;
+    private final KakaoMapService kakaoMapService;
 
     //스터디룸 생성]
     @Transactional
     public AdminStudyRoomResponseDto createStudyRoom(AdminStudyRoomRequestDto requestDto) {
+        // 📍 좌표 가져오기
+        Double[] coordinates = kakaoMapService.getCoordinatesFromAddress(requestDto.getLocation());
+        Double latitude = coordinates[0];
+        Double longitude = coordinates[1];
+
+        // 🏢 StudyRoom 생성 + 좌표 추가
         StudyRoom studyRoom = new StudyRoom(
                 requestDto.getName(),
                 requestDto.getLocation(),
                 requestDto.getTotal_seats()
         );
+        studyRoom.setLatitude(latitude);
+        studyRoom.setLongitude(longitude);
 
-        //좌석 자동 생성
+        // 💺 좌석 자동 생성
         StudyRoom saved = studyRoomRepository.save(studyRoom);
         for (int i = 1; i <= requestDto.getTotal_seats(); i++) {
             Seat seat = new Seat();
@@ -39,12 +48,15 @@ public class AdminStudyRoomService {
             seat.setStudyRoom(saved);
             seatRepository.save(seat);
         }
+
         return new AdminStudyRoomResponseDto(
                 saved.getId(),
                 saved.getLocation(),
                 saved.getName(),
-                saved.getTotal_seats());
+                saved.getTotal_seats()
+        );
     }
+
     //스터디룸 수정
     public AdminStudyRoomResponseDto updateStudyRoom(Long id, AdminStudyRoomRequestDto adminStudyRoomRequestDto) {
         StudyRoom studyRoom = studyRoomRepository.findById(id)
