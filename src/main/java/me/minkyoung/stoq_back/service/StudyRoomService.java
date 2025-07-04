@@ -81,7 +81,7 @@ public class StudyRoomService {
         long userdSeatCount = 0;
         for(Seat s : seats){
             Optional<Reservation> activeReservation = reservationRepository.findBySeatIdAndStatusAndStartTimeLessThanEqualAndEndTimeGreaterThan(
-                            s.getId(),
+                    s.getId(),
                     ReservationStatus.RESERVED,
                     LocalDateTime.now(),
                     LocalDateTime.now()

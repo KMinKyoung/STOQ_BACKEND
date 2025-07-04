@@ -30,7 +30,7 @@ public class JwtTokenProvider {
 
         Claims claims = Jwts.claims().setSubject(email);
         if (role != null) {
-            claims.put("role", role.name()); // ✅ 역할을 payload에 추가
+            claims.put("role", role.name());
         }
 
         return Jwts.builder()
