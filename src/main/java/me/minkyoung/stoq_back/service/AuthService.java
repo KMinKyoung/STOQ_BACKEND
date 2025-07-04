@@ -37,7 +37,7 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 사용자입니다."));
 
         //토큰 발급
-        String accessToken = jwtTokenProvider.createdAccessToken(user.getEmail());
+        String accessToken = jwtTokenProvider.createdAccessToken(user.getEmail(), user.getRole());
         String refreshToken = jwtTokenProvider.createdRefreshToken(user.getEmail());
 
         //RefreshToken 저장
@@ -62,9 +62,11 @@ public class AuthService {
         if(!savedToken.getToken().equals(refreshToken)){
             throw new RuntimeException("token mismatch");
         }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        //새 토큰 발급
-        String newAccess = jwtTokenProvider.createdAccessToken(email);
+        //새토큰 발급
+        String newAccess = jwtTokenProvider.createdAccessToken(user.getEmail(), user.getRole());
         String newRefresh = jwtTokenProvider.createdRefreshToken(email);
 
         refreshTokenRepository.save(new RefreshToken(email,newRefresh));

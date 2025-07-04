@@ -1,8 +1,10 @@
 package me.minkyoung.stoq_back.config;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import me.minkyoung.stoq_back.domain.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,21 +19,28 @@ public class JwtTokenProvider {
     private final long accessTokenValidTime = 1000L * 60 *30; //30분
     private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7; //7일
 
-    public String createdAccessToken(String email) {
-        return createToken(email, accessTokenValidTime);
+    public String createdAccessToken(String email, Role role) {
+        return createToken(email,role, accessTokenValidTime);
     }
     public String createdRefreshToken(String email) {
-        return createToken(email, refreshTokenValidTime);
+        return createToken(email,null, refreshTokenValidTime);
     }
-    private String createToken(String email, long tokenValidTime) {
+    private String createToken(String email, Role role, long tokenValidTime) {
         Date now = new Date();
+
+        Claims claims = Jwts.claims().setSubject(email);
+        if (role != null) {
+            claims.put("role", role.name()); // ✅ 역할을 payload에 추가
+        }
+
         return Jwts.builder()
-                .setSubject(email)
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
+
 
     public boolean validateToken(String token) {
         try{
