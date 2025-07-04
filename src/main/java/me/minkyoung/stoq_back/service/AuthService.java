@@ -2,6 +2,7 @@ package me.minkyoung.stoq_back.service;
 
 import lombok.RequiredArgsConstructor;
 import me.minkyoung.stoq_back.config.JwtTokenProvider;
+import me.minkyoung.stoq_back.domain.Role;
 import me.minkyoung.stoq_back.dto.RefreshToken;
 import me.minkyoung.stoq_back.dto.SignupRequestDto;
 import me.minkyoung.stoq_back.dto.TokenDto;
@@ -83,6 +84,7 @@ public class AuthService {
                 .phone(requestDto.getPhone())
                 .isMember(true)
                 .remaining_time(0)
+                .role(Role.USER)
                 .build();
 
         userRepository.save(user);
