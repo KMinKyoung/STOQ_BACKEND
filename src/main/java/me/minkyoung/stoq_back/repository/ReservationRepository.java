@@ -21,6 +21,8 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     List<Reservation> findByStatusAndEndTimeBefore(ReservationStatus status, LocalDateTime time);
     //예약 만료처리 - 좌석 1개만
     List<Reservation> findFirstBySeatAndStatusAndEndTimeBefore(Seat seat, ReservationStatus status, LocalDateTime time);
-    
+    //내가 옝갸한 좌석
+    List<Reservation> findByUser_IdAndStatus(Long userId, ReservationStatus status);
+
     // 추후 실시간 시간 처리에 이용될 예정
 }

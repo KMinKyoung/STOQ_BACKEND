@@ -10,5 +10,5 @@ public class UserInfoDto {
     private String name;
     private String phone;
     private boolean isMember;
-    private int remainingTime;
+    private int remainingMinutes;
 }
