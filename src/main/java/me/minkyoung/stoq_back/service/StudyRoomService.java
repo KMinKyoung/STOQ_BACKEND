@@ -122,6 +122,7 @@ public class StudyRoomService {
         reservation.setStartTime(requestDto.getStartTime());
         reservation.setEndTime(requestDto.getEndTime());
         reservation.setStatus(ReservationStatus.RESERVED);
+        reservation.setStudyRoom(seat.getStudyRoom());
 
         reservationRepository.save(reservation);
 
