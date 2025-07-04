@@ -25,10 +25,9 @@ public class TimeChargeController {
 
     //시간 충전 요청
     @PostMapping("/charge")
-    public ResponseEntity<String> chargeTime(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                             @RequestBody TimeChargeRequestDto requestDto) {
-        Long userId = userDetails.getUser().getId(); // 로그인된 사용자 ID
-        timeChargeService.chargeTime(userId, requestDto.getProductId());
-        return ResponseEntity.ok("충전이 완료되었습니다.");
+    public ResponseEntity<Void> chargeTime(@RequestBody TimeChargeRequestDto requestDto) {
+        timeChargeService.chargeTime(requestDto.getProductId());
+        return ResponseEntity.ok().build();
     }
+
 }
