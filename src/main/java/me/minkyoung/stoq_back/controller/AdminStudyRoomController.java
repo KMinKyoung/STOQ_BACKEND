@@ -5,6 +5,7 @@ import me.minkyoung.stoq_back.dto.AdminStudyRoomRequestDto;
 import me.minkyoung.stoq_back.dto.AdminStudyRoomResponseDto;
 import me.minkyoung.stoq_back.service.AdminStudyRoomService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/study-rooms")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminStudyRoomController {
         private final AdminStudyRoomService adminStudyRoomService;
 
