@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/studyrooms","/api/studyrooms/details/**","/api/times/products").permitAll()
                         .requestMatchers("/api/studyrooms/{studyRoomId}/seats","/api/reservations/**","/api/times/charge").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
