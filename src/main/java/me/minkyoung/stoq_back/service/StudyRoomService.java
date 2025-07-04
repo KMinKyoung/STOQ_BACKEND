@@ -204,4 +204,10 @@ public class StudyRoomService {
 
         return new CancelReservationResponseDto(reservation.getId(), refundable, newRemaining);
     }
+
+    //맵 찍기
+    public StudyRoom findById(Long id) {
+        return studyRoomRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디카페가 존재하지 않습니다."));
+    }
 }

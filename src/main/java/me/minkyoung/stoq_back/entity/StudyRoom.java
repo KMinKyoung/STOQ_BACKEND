@@ -42,6 +42,12 @@ public class StudyRoom {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    //위도
+    @Column(nullable = false)
+    private Double latitude;
+    //경도
+    @Column(nullable = false)
+    private Double longitude;
 
     public StudyRoom(String name, String location, int total_seats){
         this.name = name;

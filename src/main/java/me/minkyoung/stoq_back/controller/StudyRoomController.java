@@ -2,6 +2,7 @@ package me.minkyoung.stoq_back.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.minkyoung.stoq_back.dto.*;
+import me.minkyoung.stoq_back.entity.StudyRoom;
 import me.minkyoung.stoq_back.entity.User;
 import me.minkyoung.stoq_back.service.CustomUserDetails;
 import me.minkyoung.stoq_back.service.StudyRoomService;
@@ -57,5 +58,12 @@ public class StudyRoomController {
         CancelReservationResponseDto responseDto = studyRoomService.cancelReservation(user, requestDto);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    //맵 찍기
+    @GetMapping("/{id}/map")
+    public ResponseEntity<MapDto> getMap(@PathVariable Long id) {
+        StudyRoom room = studyRoomService.findById(id);
+        return ResponseEntity.ok(new MapDto(room.getLatitude(), room.getLongitude()));
     }
 }
