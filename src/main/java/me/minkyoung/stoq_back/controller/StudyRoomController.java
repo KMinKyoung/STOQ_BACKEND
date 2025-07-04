@@ -33,10 +33,14 @@ public class StudyRoomController {
 
     //예약
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> reservationSeat(@RequestBody ReservationRequestDto reservationRequestDto) {
-        ReservationResponseDto responseDto = studyRoomService.reserveSeat(reservationRequestDto);
+    public ResponseEntity<ReservationResponseDto> reservationSeat(@AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody ReservationRequestDto reservationRequestDto) {
+
+        Long userId = userDetails.getUser().getId();
+        ReservationResponseDto responseDto = studyRoomService.reserveSeat(reservationRequestDto, userId);
         return ResponseEntity.ok(responseDto);
     }
+
 
     //좌석 자리 확인
     @GetMapping("/studyrooms/{studyRoomId}/seats")
