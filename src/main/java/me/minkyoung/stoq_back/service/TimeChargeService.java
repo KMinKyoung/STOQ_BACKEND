@@ -31,9 +31,10 @@ public class TimeChargeService {
 
     //시간 충전
     @Transactional
-    public void chargeTime(Long productId) {
+    public void chargeTimeAfterPayment(Long productId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
@@ -41,11 +42,10 @@ public class TimeChargeService {
                 .orElseThrow(() -> new IllegalArgumentException("충전 상품이 존재하지 않습니다."));
 
         UserTime userTime = userTimeRepository.findByUser_Id(user.getId())
-                .orElse(new UserTime(null , user, 0, null,null));
+                .orElse(new UserTime(null, user, 0, null, null));
 
         userTime.addMinutes(product.getMinutes());
         userTimeRepository.save(userTime);
     }
-
 
 }
