@@ -194,6 +194,7 @@ public class StudyRoomService {
         User user = userRepository.findByIdWithTime(userId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
         user.getUserTime().addMinutes(refundable);
+        user.getUserTime().addMinutes(refundable);
         userRepository.save(user);
         int newRemaining = user.getUserTime().getRemainingMinutes();
 
