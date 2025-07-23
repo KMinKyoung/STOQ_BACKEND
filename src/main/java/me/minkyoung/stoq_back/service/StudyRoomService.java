@@ -68,10 +68,22 @@ public class StudyRoomService {
     @Transactional //예약시 데이터 일관성 유지
     //스터디룸 좌석 예약
     public ReservationResponseDto reserveSeat(ReservationRequestDto requestDto, Long userId) {
-        //좌석 객체 생성
-        Seat seat = seatRepository.findById(requestDto.getSeatId())
+        // for update 락과 함께 좌석 조회
+        Seat seat = seatRepository.findByIdForUpdate(requestDto.getSeatId())
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 좌석입니다."));
-        //유저 객체 생성 / 비회원은 좀 더 고려
+
+        boolean occupied = reservationRepository.findBySeatIdAndStatusAndStartTimeLessThanEqualAndEndTimeGreaterThan(
+                seat.getId(),
+                ReservationStatus.RESERVED,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        ).isPresent();
+
+        if (occupied) {
+            throw new IllegalArgumentException("해당 좌석은 현재 사용중입니다.");
+        }
+
+        //유저 객체 생성 / 비회원의 경우 설계 의의를 좀 더 고민해봐야함.
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
@@ -119,10 +131,12 @@ public class StudyRoomService {
         Reservation reservation = new Reservation();
         reservation.setSeat(seat);
         reservation.setUser(user);
+        reservation.setUserTime(userTime);
         reservation.setStartTime(requestDto.getStartTime());
         reservation.setEndTime(requestDto.getEndTime());
         reservation.setStatus(ReservationStatus.RESERVED);
         reservation.setStudyRoom(seat.getStudyRoom());
+
 
         reservationRepository.save(reservation);
 

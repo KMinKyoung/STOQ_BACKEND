@@ -34,4 +34,6 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     @Query("DELETE FROM Reservation r WHERE r.studyRoom.id = :studyRoomId")
     void deleteByStudyRoomId(@Param("studyRoomId") Long studyRoomId);
     // 추후 실시간 시간 처리에 이용될 예정
+
+
 }

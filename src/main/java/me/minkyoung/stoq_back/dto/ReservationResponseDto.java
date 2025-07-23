@@ -19,4 +19,5 @@ public class ReservationResponseDto {
     private LocalDateTime endTime;
     private ReservationStatus status;
     private int remainingMinutes;
+
 }
