@@ -127,6 +127,7 @@ public class StudyRoomService {
             throw new IllegalArgumentException("시간을 충전해야합니다.");
         }
 
+
         //Reservation 생성 및 저장
         Reservation reservation = new Reservation();
         reservation.setSeat(seat);
@@ -201,14 +202,18 @@ public class StudyRoomService {
         //사용시간 계산
         long usedMinutes = Duration.between(reservation.getStartTime(), LocalDateTime.now()).toMinutes();
         long totalMinutes = Duration.between(reservation.getStartTime() ,reservation.getEndTime()).toMinutes();
-        long refundableLong = Math.max(0,totalMinutes-usedMinutes);
+        int refundable =(int) Math.max(0,totalMinutes-usedMinutes);
 
-        int refundable = (int) refundableLong;
+
         //유저에게 시간 환급
         User user = userRepository.findByIdWithTime(userId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
-        user.getUserTime().addMinutes(refundable);
-        user.getUserTime().addMinutes(refundable);
+        UserTime userTime = user.getUserTime();
+        //예약된 전체 시간 차감
+        userTime.subMinutes((int) usedMinutes);
+        //미사용 시간 환불
+        userTime.addMinutes(refundable);
+        //유저 타임 변경점 저장
         userRepository.save(user);
         int newRemaining = user.getUserTime().getRemainingMinutes();
 
