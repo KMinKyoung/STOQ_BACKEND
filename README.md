@@ -1,5 +1,6 @@
 ﻿# STOQ(Study To Quick) READ ME
- <img width="285" height="253" alt="Image" src="https://github.com/user-attachments/assets/82243357-f905-49fb-962c-cf38285cab34" />
+ <img src="https://github.com/user-attachments/assets/82243357-f905-49fb-962c-cf38285cab34" />
+ 
 [시연 영상](https://youtu.be/RCE37fDnb00?si=eCjD78XVrPuz_Gi3)
 
 ## 프로젝트 소개
@@ -199,6 +200,7 @@
 | 홍보 채널 사용                 | 소규모의 스터디룸을 운영하는 사장님과 제휴를 맺어, 본인의 스터디룸을 홍보할 수 있음           |
 | 운영 효율성 증대                | 좌석 예약 현황을 실시간으로 확인 가능하기에,피크 타임 분석과 예약 통계 확인 기능을 통해 효율성 증대 |
 | AWS 배포 구성(EC2 + RDS + S3 | 클라우드 기반 인프라 구축 및 자원 관리                                    |
+
 
 
 
